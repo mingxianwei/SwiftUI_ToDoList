@@ -7,11 +7,18 @@
 
 import SwiftUI
 
+var formatter = DateFormatter()
+
+
 @main
 struct ToDoListApp: App {
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+
+        formatter.dateFormat = "HH:mm"
+        formatter.timeZone = TimeZone(secondsFromGMT: 8)
+        
+        return WindowGroup {
+                Home(main: Main())
         }
     }
 }
