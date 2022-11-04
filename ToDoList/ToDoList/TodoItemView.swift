@@ -46,6 +46,16 @@ struct TodoItemView: View {
     @Binding var todoIndex: Int
     @State private var checked: Bool = false
     
+    /// 将时间转化为 HH:mm格式字符串
+    func dateToString(date:Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.dateFormat = "HH:mm"
+        formatter.timeZone = TimeZone(secondsFromGMT: 8)
+        return formatter.string(from: date)
+    }
+    
+    
     var body: some View {
         HStack {
             Button {
@@ -79,9 +89,7 @@ struct TodoItemView: View {
                             Spacer()
                                 .frame(width: 12)
                             
-                            let string = formatter.string(from:self.main.todos[self.todoIndex].dudate)
-                            
-                            Text(string)
+                            Text(dateToString(date:self.main.todos[self.todoIndex].dudate))
                                 .foregroundColor(Color("todoItemSubTitle"))
                                 .font(.subheadline)
                             

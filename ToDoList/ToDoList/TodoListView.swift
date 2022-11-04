@@ -21,12 +21,21 @@ struct TodoListView: View {
     
     @ObservedObject var main: Main
     
+    
+    func dateToShortString(date:Date) -> String {
+        ///// 将时间转化为  日期格式
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        return formatter.string(from: date)
+    }
+    
+    
     var body: some View {
         ScrollView(showsIndicators: false) {
             ForEach(self.main.todos) { item in
                 VStack {
                     Spacer().frame(height: 15)
-                    if item.index == 0 || formatter.string(from: item.dudate) != formatter.string(from: self.main.todos[item.index - 1].dudate) {
+                    if item.index == 0 || dateToShortString(date: item.dudate) != dateToShortString(date: self.main.todos[item.index - 1].dudate) {
                         /// 插入时间分组
                         HStack {
                             Spacer().frame(width:30)
@@ -51,7 +60,13 @@ struct TodoListView: View {
             
         }.onAppear{  /// 每次进入 就从 沙盒中读取
             if let data = UserDefaults.standard.object(forKey: "todos") as? Data {
-                let todoList = NSKeyedUnarchiver.unarchiveObject(with: data) as? [Todo] ?? []
+                var todoList: [Todo] = []
+                do {
+                    todoList =  try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? [Todo] ?? []
+                } catch {
+                    print("ERROR")
+                }
+
                 for todo in todoList {
                     if !todo.checked {
                         self.main.todos.append(todo)

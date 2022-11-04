@@ -15,12 +15,10 @@ struct TodoDetails: View {
         VStack{
             
             HStack {
-                
+                /// 取消按钮
                 Button {
-                    UIApplication.shared.keyWindow?.endEditing(true)
-                    
+                    ToDoListApp().keyWindow?.endEditing(true)
                     self.main.detailsShowing = false
-                    
                 } label: {
                     Text("取消")
                         .padding()
@@ -28,8 +26,9 @@ struct TodoDetails: View {
                 
                 Spacer()
                 
+                /// 添加按钮
                 Button {
-                    UIApplication.shared.keyWindow?.endEditing(true)
+                    ToDoListApp().keyWindow?.endEditing(true)
                     if editingMode {
                         self.main.todos[editingIndex].title = self.main.detailsTitle
                         self.main.todos[editingIndex].dudate = self.main.detialsDueDate
@@ -37,10 +36,10 @@ struct TodoDetails: View {
                     } else {
                         let newTodo = Todo(title: self.main.detailsTitle, dudate: self.main.detialsDueDate)
                         self.main.todos.append(newTodo)
-                        
                     }
                     
                     self.main.sort()
+                    
                     do{
                         let archivedata = try NSKeyedArchiver.archivedData(withRootObject: self.main.todos, requiringSecureCoding: false)
                         UserDefaults.standard.set(archivedata, forKey: "todos")

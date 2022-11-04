@@ -7,17 +7,18 @@
 
 import SwiftUI
 
-var formatter = DateFormatter()
-
-
 @main
 struct ToDoListApp: App {
-    var body: some Scene {
+    /// 添加KeyWindow
+    let keyWindow = UIApplication.shared.connectedScenes
+            .filter({$0.activationState == .foregroundActive})
+            .map({$0 as? UIWindowScene})
+            .compactMap({$0})
+            .first?.windows
+            .filter({$0.isKeyWindow}).first
 
-        formatter.dateFormat = "HH:mm"
-        formatter.timeZone = TimeZone(secondsFromGMT: 8)
-        
-        return WindowGroup {
+    var body: some Scene {
+        WindowGroup {
                 Home(main: Main())
         }
     }
