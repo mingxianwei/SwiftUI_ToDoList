@@ -13,8 +13,6 @@ var editingMode: Bool = false
 var editingTodo: Todo = emptyTodo
 /// 正在编辑的待办事项的索引
 var editingIndex: Int = 0
-///
-var detailsShouldUpdateTitle: Bool = false
 
 
 class Main: ObservableObject {
@@ -49,7 +47,6 @@ struct Home: View {
                 Button {
                     editingMode = false
                     editingTodo = emptyTodo
-                    detailsShouldUpdateTitle = true
                     
                     self.main.detailsTitle = ""
                     self.main.detialsDueDate = Date()

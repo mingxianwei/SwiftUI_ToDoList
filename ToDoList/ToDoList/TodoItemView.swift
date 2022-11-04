@@ -34,8 +34,6 @@ class Todo: NSObject, NSCoding, Identifiable {
     }
 }
 
-
-
 /// 空待办事项
 var emptyTodo: Todo = Todo(title: "", dudate: Date())
 
@@ -63,7 +61,6 @@ struct TodoItemView: View {
                 editingMode = true
                 editingTodo = self.main.todos[self.todoIndex]
                 editingIndex = self.todoIndex
-                detailsShouldUpdateTitle = true
 
                 self.main.detailsTitle = editingTodo.title
                 self.main.detialsDueDate = editingTodo.dudate
@@ -102,10 +99,8 @@ struct TodoItemView: View {
             Spacer()
             
             Button {
-                
                 self.main.todos[self.todoIndex].checked.toggle()
                 self.checked =  self.main.todos[self.todoIndex].checked
-                
                 do {
                     let archivedDate = try NSKeyedArchiver.archivedData(withRootObject: self.main.todos, requiringSecureCoding: false)
                     UserDefaults.standard.set(archivedDate, forKey: "todos")
