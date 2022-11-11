@@ -36,7 +36,6 @@ class Main: ObservableObject {
     }
 }
 
-
 // MARK: - View
 struct Home: View {
     
