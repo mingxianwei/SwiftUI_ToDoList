@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// 示例 APP
+/// 示例 数组
 var exampleTodos: [Todo] = [
     Todo(title: "擦地", dudate:  Date()),
     Todo(title:"洗锅", dudate: Date(timeIntervalSince1970: 20000)),
@@ -17,18 +17,13 @@ var exampleTodos: [Todo] = [
 ]
 
 
+
 struct TodoListView: View {
     
+//MARK: - === 属性 ===
     @ObservedObject var main: Main
-    
-    
-    func dateToShortString(date:Date) -> String {
-        ///// 将时间转化为  日期格式
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        return formatter.string(from: date)
-    }
-    
+
+//MARK: - === Body ===
     
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -47,10 +42,12 @@ struct TodoListView: View {
                     /// 每一个Item
                     HStack {
                         Spacer().frame(width: 20)
+                        
                         TodoItemView(main: main, todoIndex: .constant(item.index))
                             .cornerRadius(10)
                             .clipped()
                             .shadow(color: Color("todoItemShadow"), radius: 5)
+        
                         Spacer()
                     }
                     .frame(height: 100)  // item 高度
@@ -59,27 +56,53 @@ struct TodoListView: View {
             }
             
         }.onAppear{  /// 每次进入 就从 沙盒中读取
-            if let data = UserDefaults.standard.object(forKey: "todos") as? Data {
-                var todoList: [Todo] = []
-                do {
-                    todoList =  try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? [Todo] ?? []
-                } catch {
-                    print("ERROR")
-                }
-
-                for todo in todoList {
-                    if !todo.checked {
-                        self.main.todos.append(todo)
-                        self.main.sort()
-                    }
-                }
-            } else {
-                self.main.todos = exampleTodos
-                self.main.sort()
-            }
+            readDataFromUserDefalults()
         }
     }
+    
+    
+    
+//MARK: - === 方法 ===
+    
+    /// 将日期转化为 HH:mm 格式字符串
+    /// - Parameter date: Date 时间
+    /// - Returns: HH:mm格式字符串
+   private func dateToShortString(date:Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        return formatter.string(from: date)
+    }
+    
+    
+    // 从沙盒中读取数据
+    /*
+     如果沙盒中没有数据 则 读取 exampleTodos
+     */
+   private func readDataFromUserDefalults()  {
+        if let data = UserDefaults.standard.object(forKey: "todos") as? Data {
+            var todoList: [Todo] = []
+            do {
+                todoList =  try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? [Todo] ?? []
+            } catch {
+                print("ERROR")
+            }
+            
+            for todo in todoList {
+                if !todo.checked {
+                    self.main.todos.append(todo)
+                    self.main.sort()
+                }
+            }
+        } else {
+            self.main.todos = exampleTodos
+            self.main.sort()
+        }
+    }
+    
+    
 }
+
+//MARK: - === Previews ===
 
 struct TodoListView_Previews: PreviewProvider {
     static var previews: some View {

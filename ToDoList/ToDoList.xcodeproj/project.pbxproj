@@ -111,9 +111,9 @@
 			isa = PBXGroup;
 			children = (
 				855167BD290BAAD30020EBFA /* ToDoListApp.swift */,
+				8528BC32291227E700949530 /* Home.swift */,
 				855167F4290BAE690020EBFA /* TodoItemView.swift */,
 				8528BC34291239D000949530 /* TodoListView.swift */,
-				8528BC32291227E700949530 /* Home.swift */,
 				85ECC0B6291268EA0013871F /* TodoDetails.swift */,
 				855167C1290BAAD40020EBFA /* Assets.xcassets */,
 				855167E7290BADCB0020EBFA /* Third-Parties */,

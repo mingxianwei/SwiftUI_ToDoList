@@ -15,6 +15,9 @@ var editingTodo: Todo = emptyTodo
 var editingIndex: Int = 0
 
 
+//MARK: - === ViewModel ===
+
+// Model
 class Main: ObservableObject {
     
     @Published var todos: [Todo] = []
@@ -34,42 +37,56 @@ class Main: ObservableObject {
 }
 
 
+// MARK: - View
 struct Home: View {
     
     @ObservedObject var main: Main
-    
+
     var body: some View {
-        
         NavigationView {
-            ZStack {
+            ZStack(alignment: .center){
+
                 TodoListView(main: main)
                     .blur(radius: main.detailsShowing ? 50 : 0)
-                Button {
-                    editingMode = false
-                    editingTodo = emptyTodo
+
+                ZStack (alignment: .bottomTrailing){
+                    /* 需要使用背景将这个Zstack 填满
+                       防止在滑动时候 外部Zstack变化导致Button 飘动的Bug
+                     */
+                    Color.clear.opacity(0.3)
                     
-                    self.main.detailsTitle = ""
-                    self.main.detialsDueDate = Date()
-                    self.main.detailsShowing = true
+                    Button(action: buttonClicked, label: { BtnAdd() })
+                        .offset(x: -60,y: -120)
+                        .blur(radius: main.detailsShowing ? 50 : 0)
+                        .animation(.spring(), value: main.detailsShowing)
+                    
+                }
+                .edgesIgnoringSafeArea(.vertical)
                 
-                } label: {
-                    BtnAdd()
-                }.offset(x: UIScreen.main.bounds.width / 2 - 60,y: UIScreen.main.bounds.height / 2.0 - 160)
-                    .blur(radius: main.detailsShowing ? 50 : 0)
-                    .animation(.spring(), value: main.detailsShowing)
                 TodoDetails(main: main)
                     .offset(x: 0 ,y: main.detailsShowing ? 0 : UIScreen.main.bounds.height)
                     .animation(.easeInOut(duration: 0.2), value: main.detailsShowing)
             }
             .navigationTitle(Text("待办事项"))
-            .navigationBarTitleDisplayMode(NavigationBarItem.TitleDisplayMode.large)
-            .edgesIgnoringSafeArea(.horizontal)
+            .navigationBarTitleDisplayMode(NavigationBarItem.TitleDisplayMode.automatic)
         }
+
+    }
+    
+    func buttonClicked() {
+        editingMode = false
+        editingTodo = emptyTodo
+        self.main.detailsTitle = ""
+        self.main.detialsDueDate = Date()
+        self.main.detailsShowing = true
+
     }
 }
 
 
+// MARK: - SubView
 
+/// + 号按钮View
 struct BtnAdd: View {
     var size: CGFloat = 65.0
     var body: some View{
@@ -86,7 +103,7 @@ struct BtnAdd: View {
     }
 }
 
-
+// MARK: - Preview
 struct Home_Previews: PreviewProvider {
     static var previews: some View {
         Home(main: Main())
