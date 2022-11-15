@@ -21,6 +21,8 @@ var editingIndex: Int = 0
 class Main: ObservableObject {
     
     @Published var todos: [Todo] = []
+//    @AppStorage("todos") var todos:TodoList = TodoList()
+    
     @Published var detailsShowing: Bool = false
     @Published var detailsTitle: String = ""
     @Published var detialsDueDate: Date = Date()

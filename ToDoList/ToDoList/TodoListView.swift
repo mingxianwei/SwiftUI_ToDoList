@@ -79,6 +79,10 @@ struct TodoListView: View {
      如果沙盒中没有数据 则 读取 exampleTodos
      */
    private func readDataFromUserDefalults()  {
+       
+
+
+
         if let data = UserDefaults.standard.object(forKey: "todos") as? Data {
             var todoList: [Todo] = []
             do {
@@ -87,7 +91,7 @@ struct TodoListView: View {
             } catch {
                 print("ERROR")
             }
-            
+
             for todo in todoList {
                 if !todo.checked {
                     self.main.todos.append(todo)
@@ -99,8 +103,6 @@ struct TodoListView: View {
             self.main.sort()
         }
     }
-    
-    
 }
 
 //MARK: - === Previews ===

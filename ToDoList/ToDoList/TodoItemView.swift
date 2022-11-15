@@ -63,8 +63,31 @@ class Todo: Identifiable,Encodable,Decodable {   //Encodable 和 Decodable 可�
     
 }
 
+
 /// 空待办事项
 var emptyTodo: Todo = Todo(title: "", dudate: Date())
+typealias TodoList = [Todo]
+
+extension TodoList: RawRepresentable  {
+    public init?(rawValue: String) {
+        guard let data = rawValue.data(using: .utf8),
+              let result = try? JSONDecoder().decode([Todo].self, from: data)
+        else {
+            return nil
+        }
+        self = result
+    }
+
+    public var rawValue: String {
+        guard let data = try? JSONEncoder().encode(self),
+              let result = String(data: data, encoding: .utf8)
+        else {
+            return "[]"
+        }
+        return result
+    }
+}
+
 
 
 struct TodoItemView: View {
@@ -159,7 +182,6 @@ struct TodoItemView: View {
                         .frame(width: 12)
                 }
             }.onAppear{
-                
                 self.checked = self.main.todos[self.todoIndex].checked
             }
         }
