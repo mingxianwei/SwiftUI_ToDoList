@@ -8,21 +8,22 @@
 import SwiftUI
 
 
-class Todo: NSObject, NSCoding, Identifiable {
+//class Todo: Identifiable,Codable {
+class Todo: Identifiable,Encodable,Decodable {   //Encodable 和 Decodable 可以合并成为 Codable
     
-    func encode(with coder: NSCoder) {
-        coder.encode(self.title, forKey: "title")
-        coder.encode(self.dudate, forKey: "dudate")
-        coder.encode(self.checked,forKey: "checked")
-    }
+//    func encode(with coder: NSCoder) {
+//        coder.encode(self.title, forKey: "title")
+//        coder.encode(self.dudate, forKey: "dudate")
+//        coder.encode(self.checked,forKey: "checked")
+//    }
+//
+//    required init?(coder: NSCoder) {
+//        self.title = coder.decodeObject(forKey: "title") as? String ?? ""
+//        self.dudate = coder.decodeObject(forKey: "dudate") as? Date ?? Date()
+//        self.checked = coder.decodeBool(forKey: "checked")
+//    }
     
-    required init?(coder: NSCoder) {
-        self.title = coder.decodeObject(forKey: "title") as? String ?? ""
-        self.dudate = coder.decodeObject(forKey: "dudate") as? Date ?? Date()
-        self.checked = coder.decodeBool(forKey: "checked")
-    }
-    
-    
+    //MARK: - ===  Var  ===
     var title: String = ""
     var dudate: Date = Date()
     var checked: Bool = false
@@ -32,6 +33,34 @@ class Todo: NSObject, NSCoding, Identifiable {
         self.title = title
         self.dudate = dudate
     }
+    
+    //MARK: - === Codable ===
+    
+    required init(from decoder: Decoder) throws {
+        let container   = try decoder.container(keyedBy: CodingKeys.self)
+        self.title      = try container.decode(String.self, forKey: .title)
+        self.dudate     = try container.decode(Date.self, forKey: .dudate)
+        self.checked    = try container.decode(Bool.self, forKey: .checked)
+        self.index      = try container.decode(Int.self, forKey: .index)
+    }
+    
+    enum CodingKeys: CodingKey {
+        case title
+        case dudate
+        case checked
+        case index
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.title, forKey: .title)
+        try container.encode(self.dudate, forKey: .dudate)
+        try container.encode(self.checked, forKey: .checked)
+        try container.encode(self.index, forKey: .index)
+    }
+    
+    
+    
 }
 
 /// 空待办事项
@@ -101,13 +130,18 @@ struct TodoItemView: View {
             Button {
                 self.main.todos[self.todoIndex].checked.toggle()
                 self.checked =  self.main.todos[self.todoIndex].checked
+                
                 do {
-                    let archivedDate = try NSKeyedArchiver.archivedData(withRootObject: self.main.todos, requiringSecureCoding: false)
+                    
+                    let archivedDate = try JSONEncoder().encode(self.main.todos)
+                    
+//                    let archivedDate = try NSKeyedArchiver.archivedData(withRootObject: self.main.todos, requiringSecureCoding: false)
                     UserDefaults.standard.set(archivedDate, forKey: "todos")
                     
                 } catch {
                     print("error")
                 }
+                
      
             } label: {
                 HStack {

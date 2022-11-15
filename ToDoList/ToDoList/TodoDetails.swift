@@ -64,7 +64,8 @@ struct TodoDetails: View {
         }
         self.main.sort()
         do{
-            let archivedata = try NSKeyedArchiver.archivedData(withRootObject: self.main.todos, requiringSecureCoding: false)
+            let archivedata = try JSONEncoder().encode(self.main.todos)
+//            let archivedata = try NSKeyedArchiver.archivedData(withRootObject: self.main.todos, requiringSecureCoding: false)
             UserDefaults.standard.set(archivedata, forKey: "todos")
         } catch {
             print("ERROR")

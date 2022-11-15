@@ -82,7 +82,8 @@ struct TodoListView: View {
         if let data = UserDefaults.standard.object(forKey: "todos") as? Data {
             var todoList: [Todo] = []
             do {
-                todoList =  try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? [Todo] ?? []
+//                todoList =  try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? [Todo] ?? []
+                todoList = try JSONDecoder().decode([Todo].self, from: data)
             } catch {
                 print("ERROR")
             }
